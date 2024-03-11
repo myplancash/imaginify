@@ -1,13 +1,13 @@
-import Stripe from 'stripe'
-import { redirect } from 'next/navigation';
-import { connect } from 'http2';
-import { connectToDatabase } from '../database/mongoose';
+"use server";
+
+import { redirect } from 'next/navigation'
+import Stripe from "stripe";
 import { handleError } from '../utils';
+import { connectToDatabase } from '../database/mongoose';
 import Transaction from '../database/models/transaction.model';
 import { updateCredits } from './user.actions';
 
 export async function checkoutCredits(transaction: CheckoutTransactionParams) {
-  //! so we know that indeed the value exits
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
   const amount = Number(transaction.amount) * 100;
@@ -38,23 +38,19 @@ export async function checkoutCredits(transaction: CheckoutTransactionParams) {
   redirect(session.url!)
 }
 
-export async function createTransaction(transaction: CheckoutTransactionParams) {
+export async function createTransaction(transaction: CreateTransactionParams) {
   try {
-    await connectToDatabase()
+    await connectToDatabase();
 
+    // Create a new transaction with a buyerId
     const newTransaction = await Transaction.create({
-      ...transaction,
-      buyer: transaction.buyerId
+      ...transaction, buyer: transaction.buyerId
     })
 
-    await updateCredits(transaction.buyerId, transaction.credits)
+    await updateCredits(transaction.buyerId, transaction.credits);
 
-    return JSON.parse(JSON.stringify(newTransaction))
-
-  } catch(error) {
+    return JSON.parse(JSON.stringify(newTransaction));
+  } catch (error) {
     handleError(error)
   }
-
-
-
 }

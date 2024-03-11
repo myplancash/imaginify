@@ -47,13 +47,13 @@ const MediaUploader = ({
       title: 'Something went wrong while uploading',
       description: 'Please try again',
       duration: 5000,
-      className: 'error-toast' 
+      className: 'error-toast ' 
     })
   }
 
   return (
     <CldUploadWidget
-      uploadPreset="jsm_imaginify"
+      uploadPreset="imaginify"
       options={{
         multiple: false, //only allow for 1 image uplaod  
         resourceType: "image",
