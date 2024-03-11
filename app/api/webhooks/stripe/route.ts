@@ -4,8 +4,8 @@ import { NextResponse } from "next/server";
 import stripe from "stripe";
 
 // Set your Stripe API key
-const stripe ApiKey = process.env.STRIPE_SECRET_KEY!;
-const stripeClient = new stripe(stripeApiKey, {});
+/* const stripe ApiKey = process.env.STRIPE_SECRET_KEY!;
+const stripeClient = new stripe(stripeApiKey, {}); */
 
 export async function POST(request: Request) {
   const body = await request.text();
@@ -16,7 +16,7 @@ export async function POST(request: Request) {
   let event;
 
   try {
-    event = stripeClient.webhooks.constructEvent(body, sig, endpointSecret);
+    event = stripe.webhooks.constructEvent(body, sig, endpointSecret);
   } catch (err) {
     return NextResponse.json({ message: "Webhook error", error: err });
   }
